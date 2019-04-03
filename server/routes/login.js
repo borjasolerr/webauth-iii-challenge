@@ -1,8 +1,17 @@
+require('dotenv').config();
 const express = require('express');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const DB = require('../data/dbQueries');
 
 const routes = express.Router();
+
+const createToken = user => {
+  tokenPayload = {
+    subject: user.user_id
+  };
+  return jwt.sign(tokenPayload, process.env.JWT_SECRET);
+};
 
 /*
 LOGIN USER
@@ -18,7 +27,8 @@ routes.post('/', async (req, res, next) => {
       const areTheseProperCredentials = bcrypt.compareSync(password, hashedPw);
 
       if (areTheseProperCredentials) {
-        res.status(200).json({ message: 'User logged in succesfully.' });
+        const token = createToken(savedUser);
+        res.status(200).json({ message: 'User logged in succesfully.', token });
       } else {
         res.status(401).json({ error: 'Incorrect password' });
       }
