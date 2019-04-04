@@ -1,6 +1,7 @@
 require('dotenv').config();
 // Import dependencies
 const express = require('express');
+const cors = require('cors');
 const helmet = require('helmet');
 // Import middlewares
 const serverError = require('./middleware/error');
@@ -16,6 +17,7 @@ const loginUrl = '/api/login';
 const usersUrl = '/api/users';
 
 app.use(express.json());
+app.use(cors());
 app.use(helmet());
 
 app.use(registerUrl, registerRoutes);
